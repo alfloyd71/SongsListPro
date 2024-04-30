@@ -1,0 +1,23 @@
+#select-songlist{
+    width: 18em;
+}
+.select-songlist{
+    text-align: center;
+}
+#div-buttons{
+    margin-top: 2em;
+}
+body{
+    background-color:#002F31;
+}
+#copyright{
+    color: #ffffff;
+}
+#image-headphones{
+    width: 100px;
+    height: 100px;
+}
+#h1-title{
+    font-size: xx-large;
+}
+

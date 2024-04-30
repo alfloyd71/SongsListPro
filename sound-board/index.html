@@ -14,6 +14,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
      
     <link rel="stylesheet" href="https://freesmartphoneapps.com/sound-board/css/styles.css">
+    <link rel="stylesheet" href="/sound-board/css/songs-list.css">
  
   </head>
 
@@ -38,6 +39,9 @@
         </div>
       
       </nav>
+      
+      <h1 id="h1-title"><img id="image-headphones" src="/sound-board/images/headphones.png" alt="headphones.png" title="headphones.png">
+        Songs List Pro</h1> is released under the MIT License, and all of its source code is available at <a target="”_blank”" rel="noopener" href="https://github.com/alfloyd71/SongsListPro">https://github.com/alfloyd71/SongsListPro</a>
     </header>
     <div class="container">
       <div class="player">
@@ -100,14 +104,28 @@
     </div>
 
     <form>
-    
-      <!-- song list select options -->
-      <select id="select-songlist">
+
+         <!-- song list select options -->
+        <div class="select-songlist">
+          <div class="row">
+
+            <div class="col md-12">
+              <select id="select-songlist">
       
-      </select>
-      
-      <button class="btn btn-primary" id="button-addsong">Add Song</button>
-    
+              </select>
+            </div>
+   
+        </div>
+
+         <div class="row">
+  
+         <div id="div-buttons" class="col md-12">
+          <button class="btn btn-primary" id="button-addsong">Add Song</button>
+          <button class="btn btn-primary" id="button-addallsongs">Add All Songs</button>
+         </div> 
+     
+        </div>
+
     </form>
 
   <footer class="footer py-5">
@@ -128,8 +146,8 @@
       </div>
   </footer>
   
-  <script src="/sound-board/songs-list-pro-songs.js"></script>
-  <script src="/sound-board/songs-userdata-songs.js"></script>
+  <script src="/sound-board/js/songs-list-pro-songs.js"></script>
+  <script src="/sound-board/js/songs-userdata-songs.js"></script>
   <script src="/sound-board/js/script.js"></script>
   
   </body>

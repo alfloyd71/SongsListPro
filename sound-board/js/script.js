@@ -87,6 +87,7 @@ const deleteSong=(id)=>{
         // exclude a song or delete a song if song.id===id
         user_data.songs = user_data?.songs.filter((song)=>song.id!==id)
         custom_songs = custom_songs?.filter((song)=>song.id!==id)
+        // custom_songs = custom_songs?.filter((song)=>song.id!==id)
         renderSongs(user_data?.songs)
         highlightCurrentSong()
         setPlayButtonAccessibleText()
@@ -181,11 +182,13 @@ const sortSongs=()=>{
     return user_data?.songs
 }
 
-renderSongs(sortSongs())
+// renderSongs(sortSongs())
+
 
 // added the following code on 04-28-2024
 const select_songlist = document.getElementById("select-songlist")
 const button_addsong = document.getElementById("button-addsong")
+const button_addallsongs = document.getElementById("button-addallsongs")
 let custom_songs = []
 let song_selected_id=parseInt(0)
 let song_to_be_added={}
@@ -211,10 +214,13 @@ select_songlist.addEventListener("change", function() {
 
 button_addsong.addEventListener("click", (event) => {
     event.preventDefault();
+
     const option_songs = Array.from(document.getElementsByClassName("option-song"))
     option_songs.sort((a, b) => a.innerHTML.localeCompare(b.innerHTML))
-
-    const filteredSongs = all_songs.filter((song) => {
+    console.log("user_data songs is ",user_data?.songs)
+    custom_songs=[...user_data?.songs]
+    all_songs.filter((song) => {
+        console.log("filteredSongs ", "this function is getting executed")
         for (let i = 0; i < option_songs.length; i++) {
             if (parseInt(song.id) === parseInt(song_selected_id)) {
                 song_to_be_added = {
@@ -251,6 +257,7 @@ button_addsong.addEventListener("click", (event) => {
   
   // Filter out duplicate songs based on the song ID
   const unique_songs = custom_songs?.filter((song) => {
+    console.log("unique_songs is ", "unique_songs is getting executed")
     // Check if the song ID is already in the Set
     if (unique_songids.has(song.id)) {
       return false; // Duplicate, filter it out
@@ -263,12 +270,22 @@ button_addsong.addEventListener("click", (event) => {
 
   // Update user_data.songs with unique songs and render them
   user_data.songs = unique_songs;
+  console.log("user_data.songs before renderSongs is ",user_data.songs)
   renderSongs(user_data?.songs);
 }
-
+  // endif allsongsadded
+    
 });
 
+button_addallsongs.addEventListener("click", (event)=>{
+    event.preventDefault()
+    user_data.songs = all_songs;
+    //custom_songs = all_songs
+    renderSongs(user_data?.songs);
+})
+
 window.onload = () => {
+    //user_data.songs=all_songs
     all_songs.forEach((song) => {
         select_songlist.innerHTML += `<option class="option-song" id="${song.id}">${song.title}</option>`;
     });
