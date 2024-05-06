@@ -3,4 +3,4 @@ Songs List Pro lets users customize a songs playlist from a curated list of song
 
 ![/SongsListProAndroid.png](https://www.freesmartphoneapps.com/static/projects/images/SongsListProAndroid.png)
 
-Go here to see the demo page: https://freesmartphoneapps.com/sound-board/
+Go here to see the demo page: https://freesmartphoneapps.com/soundboard/
