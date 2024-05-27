@@ -14,7 +14,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
      
     <link rel="stylesheet" href="https://freesmartphoneapps.com/soundboard/css/styles.css">
-    <link rel="stylesheet" href="https://freesmartphoneapps.com/soundboard/css/songs-list.css">
+    <link rel="stylesheet" href="css/songs-list.css">
 
   </head>
 
@@ -22,7 +22,7 @@
     <header>
       <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"><img width ="100%" height="100%" src="/soundboard/images/icons/bars-solid-white.svg"></span>
+          <span class="navbar-toggler-icon"><img width ="100%" height="100%" src="images/icons/bars-solid-white.svg"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
       
@@ -32,15 +32,16 @@
                 <a class="nav-link" href="/">Home</a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link" href="/sound-board">Songs List Pro</a>
+              <a class="nav-link" href="">Songs List Pro</a>
             </li>
             
            </ul>
         </div>
       
       </nav>
+      <!-- insert custom <h1> title and logo -->
       <section id="logo">
-      <h1 id="h1-title"><img id="image-headphones" src="https://freesmartphoneapps.com/soundboard/images/icons/pwa/logo.png" alt="headphones.png" title="headphones.png">
+      <h1 id="h1-title"><img id="image-headphones" src="images/icons/headphones.svg" alt="headphones.png" title="headphones.png">
         Songs List Pro</h1> is released under the MIT License, and all of its source code is available at <a target="”_blank”" rel="noopener" href="https://github.com/alfloyd71/SongsListPro">https://github.com/alfloyd71/SongsListPro</a>
       </section>  
     </header>
@@ -59,6 +60,7 @@
           </div>
         </div>
         <div class="player-content">
+          <!-- insert custom player album art -->
           <div id="player-album-art">
    
             <img height = "140" src="https://freesmartphoneapps.com/soundboard/images/river-stream.png" alt="river-stream.png">
@@ -71,20 +73,20 @@
             <div class="player-buttons">
       
                
-                  <img id="previous" class="previous" aria-label="Previous" src="https://freesmartphoneapps.com/soundboard/images/icons/backward-step-solid-white.svg">
+                  <img id="previous" class="previous" aria-label="Previous" src="images/icons/backward-step-solid-white.svg">
             
               
               
-                 <img id="play" class="play" aria-label="Play" src="https://freesmartphoneapps.com/soundboard/images/icons/play-solid-white.svg">
+                 <img id="play" class="play" aria-label="Play" src="images/icons/play-solid-white.svg">
               
               
-                <img id="pause" class="pause" aria-label="Pause" src="https://freesmartphoneapps.com/soundboard/images/icons/pause-solid-white.svg">
+                <img id="pause" class="pause" aria-label="Pause" src="images/icons/pause-solid-white.svg">
          
               
-                <img id="next" class="next" aria-label="Next" src="https://freesmartphoneapps.com/soundboard/images/icons/forward-step-solid-white.svg">
+                <img id="next" class="next" aria-label="Next" src="images/icons/forward-step-solid-white.svg">
            
               
-                <img id="shuffle" class="shuffle" aria-label="Shuffle" src="https://freesmartphoneapps.com/soundboard/images/icons/shuffle-solid-white.svg">
+                <img id="shuffle" class="shuffle" aria-label="Shuffle" src="images/icons/shuffle-solid-white.svg">
               </div>
           </div>
         </div>
@@ -124,6 +126,8 @@
          <div id="div-buttons" class="col md-12">
           <button class="btn btn-primary" id="button-addsong">Add Song</button>
           <button class="btn btn-primary" id="button-addallsongs">Add All Songs</button>
+          <div><button class="btn btn-primary" id="button-removeallsongs">Remove All Songs</button></div>
+
          </div> 
      
         </div>

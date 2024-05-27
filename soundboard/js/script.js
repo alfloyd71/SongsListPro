@@ -1,10 +1,10 @@
-// step 18
 const button_play = document.getElementById("play")
 const button_pause = document.getElementById("pause")
 const playlist_songs = document.getElementById("playlist-songs")
 const button_next = document.getElementById("next")
 const button_previous = document.getElementById("previous")
 const button_shuffle = document.getElementById("shuffle")
+
 
 const audio = new Audio()
 
@@ -190,13 +190,11 @@ const sortSongs=()=>{
     return user_data?.songs
 }
 
-// renderSongs(sortSongs())
-
-
-// added the following code on 04-28-2024
 const select_songlist = document.getElementById("select-songlist")
 const button_addsong = document.getElementById("button-addsong")
 const button_addallsongs = document.getElementById("button-addallsongs")
+const button_removeallsongs = document.getElementById("button-removeallsongs")
+
 let custom_songs = []
 let song_selected_id=parseInt(0)
 let song_to_be_added={}
@@ -280,6 +278,25 @@ button_addallsongs.addEventListener("click", (event)=>{
     user_data.songs = all_songs;
     //custom_songs = all_songs
     renderSongs(user_data?.songs);
+})
+
+button_removeallsongs.addEventListener("click", (event)=>{
+    event.preventDefault()
+    const comfirm_removal=window.confirm("remove all songs from the playlist?")
+    if(comfirm_removal){
+      user_data.current_song=null
+      user_data.song_current_time=0  
+      user_data.songs = []
+      pauseSong()
+      setPlayerDisplay()
+      renderSongs(user_data?.songs)
+      highlightCurrentSong()
+      setPlayButtonAccessibleText()
+      
+    }
+    else{
+      return
+    }
 })
 
 window.onload = () => {

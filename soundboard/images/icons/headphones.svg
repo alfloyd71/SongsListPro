@@ -1,0 +1,28 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Headband -->
+  <path d="M50 50 C50 0, 150 0, 150 50" stroke="#333" stroke-width="10" fill="none" />
+
+  <!-- Headband padding -->
+  <path d="M55 55 C55 10, 145 10, 145 55" stroke="#555" stroke-width="8" fill="none" />
+
+  <!-- Left ear cup outer -->
+  <circle cx="50" cy="110" r="25" fill="#666" stroke="#333" stroke-width="5" />
+
+  <!-- Right ear cup outer -->
+  <circle cx="150" cy="110" r="25" fill="#666" stroke="#333" stroke-width="5" />
+
+  <!-- Left ear cup inner -->
+  <circle cx="50" cy="110" r="18" fill="#444" stroke="#333" stroke-width="2" />
+
+  <!-- Right ear cup inner -->
+  <circle cx="150" cy="110" r="18" fill="#444" stroke="#333" stroke-width="2" />
+
+  <!-- Left ear pad -->
+  <circle cx="50" cy="110" r="15" fill="#000" />
+
+  <!-- Right ear pad -->
+  <circle cx="150" cy="110" r="15" fill="#000" />
+
+  <!-- Headband shadow -->
+  <path d="M50 50 C50 0, 150 0, 150 50" stroke="rgba(0, 0, 0, 0.2)" stroke-width="12" fill="none" transform="translate(0, 5)" />
+</svg>
