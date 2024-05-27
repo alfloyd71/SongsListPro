@@ -95,23 +95,31 @@ const deleteSong=(id)=>{
 
 button_shuffle.addEventListener("click",shuffle)
 
-
 const playSong=(id)=>{
+
     const song = user_data?.songs.find((song)=>song.id===id)
-    audio.src = song.src
-    audio.title = song.title
-    if(user_data?.current_song===null || user_data?.current_song.id!==song.id){
-        audio.currentTime=0
+    if(song){
+      audio.src = song?.src
+      audio.title = song?.title
+    
+        if(user_data?.current_song===null || user_data?.current_song?.id!==song.id){
+          audio.currentTime=0
+        }
+        else{
+            audio.currentTime=user_data?.song_current_time
+        }
+        // no need to verify that current_song exists - user_data?.current_song=song
+        user_data.current_song=song
+        button_play.classList.add("playing")
+        audio.play()
+        highlightCurrentSong()
+        setPlayerDisplay()
     }
     else{
-        audio.currentTime=user_data?.song_current_time
+        return
     }
-    // no need to verify that current_song exists - user_data?.current_song=song
-    user_data.current_song=song
-    button_play.classList.add("playing")
-    audio.play()
-    highlightCurrentSong()
-    setPlayerDisplay()
+        
+   
 }
 
 const pauseSong=()=>{
@@ -124,10 +132,10 @@ const pauseSong=()=>{
 // event listeners
 button_play.addEventListener("click",(event)=>{
     if(!user_data?.current_song){
-        playSong(user_data?.songs[0].id)
+        playSong(user_data?.songs[0]?.id)
     }
     else{
-        playSong(user_data?.current_song.id)
+        playSong(user_data?.current_song?.id)
     }
 })
 
@@ -203,11 +211,6 @@ select_songlist.addEventListener("change", function() {
     const selected_text = selected_option.text;
     const selected_id = selected_option.id
     
-    // Log the selected value and text
-    console.log("Selected value:", selected_value);
-    console.log("Selected text:", selected_text);
-    console.log("Selected id:", selected_id);
-    
     // You can perform further actions here based on the selected option
     song_selected_id = parseInt(selected_id)
   });
@@ -217,10 +220,8 @@ button_addsong.addEventListener("click", (event) => {
 
     const option_songs = Array.from(document.getElementsByClassName("option-song"))
     option_songs.sort((a, b) => a.innerHTML.localeCompare(b.innerHTML))
-    console.log("user_data songs is ",user_data?.songs)
     custom_songs=[...user_data?.songs]
     all_songs.filter((song) => {
-        console.log("filteredSongs ", "this function is getting executed")
         for (let i = 0; i < option_songs.length; i++) {
             if (parseInt(song.id) === parseInt(song_selected_id)) {
                 song_to_be_added = {
@@ -240,7 +241,6 @@ button_addsong.addEventListener("click", (event) => {
     let match=false
     user_data?.songs.map((song)=>{
       if(song.id ===song_selected_id){
-        console.log("match found")
         match=true
         return
 
@@ -257,7 +257,6 @@ button_addsong.addEventListener("click", (event) => {
   
   // Filter out duplicate songs based on the song ID
   const unique_songs = custom_songs?.filter((song) => {
-    console.log("unique_songs is ", "unique_songs is getting executed")
     // Check if the song ID is already in the Set
     if (unique_songids.has(song.id)) {
       return false; // Duplicate, filter it out
@@ -270,7 +269,6 @@ button_addsong.addEventListener("click", (event) => {
 
   // Update user_data.songs with unique songs and render them
   user_data.songs = unique_songs;
-  console.log("user_data.songs before renderSongs is ",user_data.songs)
   renderSongs(user_data?.songs);
 }
   // endif allsongsadded
