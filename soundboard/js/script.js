@@ -277,7 +277,7 @@ button_addallsongs.addEventListener("click", (event)=>{
     event.preventDefault()
     user_data.songs = all_songs;
     //custom_songs = all_songs
-    renderSongs(user_data?.songs);
+    renderSongs(sortSongs());
 })
 
 button_removeallsongs.addEventListener("click", (event)=>{
