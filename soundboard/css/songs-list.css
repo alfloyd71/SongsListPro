@@ -26,3 +26,7 @@ body{
 #button-removeallsongs{
     margin-top: 2em;
 }
+.button-active {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}

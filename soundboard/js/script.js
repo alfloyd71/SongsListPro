@@ -96,7 +96,8 @@ const deleteSong=(id)=>{
 button_shuffle.addEventListener("click",shuffle)
 
 const playSong=(id)=>{
-
+    button_play.classList.remove('button-active')
+    button_pause.classList.add('button-active')
     const song = user_data?.songs.find((song)=>song.id===id)
     if(song){
       audio.src = song?.src
@@ -123,7 +124,10 @@ const playSong=(id)=>{
 }
 
 const pauseSong=()=>{
-   user_data.song_current_time=audio.currentTime
+    user_data.song_current_time=audio.currentTime
+    button_pause.classList.remove('button-active')
+    button_play.classList.add('button-active')
+   
     button_play.classList.remove("playing")
     audio.pause()
 
@@ -131,6 +135,7 @@ const pauseSong=()=>{
 
 // event listeners
 button_play.addEventListener("click",(event)=>{
+    
     if(!user_data?.current_song){
         playSong(user_data?.songs[0]?.id)
     }
