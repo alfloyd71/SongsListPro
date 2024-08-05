@@ -95,7 +95,40 @@ const deleteSong=(id)=>{
 
 button_shuffle.addEventListener("click",shuffle)
 
-const playSong=(id)=>{
+const playSong = (id) => {
+  button_play.classList.remove('button-active');
+  button_pause.classList.add('button-active');
+  const song = user_data?.songs.find((song) => song.id === id);
+
+  if (song) {
+      audio.src = song?.src;
+      audio.title = song?.title;
+
+      // Wait for the audio to be fully loaded before playing
+      audio.addEventListener('canplaythrough', () => {
+          if (user_data?.current_song === null || user_data?.current_song?.id !== song.id) {
+              audio.currentTime = 0;
+          } else {
+              audio.currentTime = user_data?.song_current_time;
+          }
+          user_data.current_song = song;
+          button_play.classList.add("playing");
+          audio.play().catch(error => {
+              console.error('Error playing audio:', error);
+          });
+          highlightCurrentSong();
+          setPlayerDisplay();
+      }, { once: true });
+
+      // Remove the previous 'canplaythrough' event listener
+      audio.load();
+  } else {
+      return;
+  }
+};
+
+
+/*const playSong=(id)=>{
     button_play.classList.remove('button-active')
     button_pause.classList.add('button-active')
     const song = user_data?.songs.find((song)=>song.id===id)
@@ -122,6 +155,7 @@ const playSong=(id)=>{
         
    
 }
+*/
 
 const pauseSong=()=>{
     user_data.song_current_time=audio.currentTime
