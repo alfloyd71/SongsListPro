@@ -1,3 +1,8 @@
+.scrollable-playlist {
+  max-height: 300px; /* Adjust this height as needed */
+  overflow-y: auto;
+}
+
 #select-songlist{
     width: 18em;
 }
@@ -5,7 +10,7 @@
     text-align: center;
 }
 #div-buttons{
-    margin-top: 2em;
+    margin-top: 1em;
 }
 body{
     background-color:#002F31;
@@ -24,7 +29,7 @@ body{
     text-align: center;
 }
 #button-removeallsongs{
-    margin-top: 2em;
+    margin-top: 0em;
 }
 .button-active {
     background-color: #4CAF50; /* Green */
