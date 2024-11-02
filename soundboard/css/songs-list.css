@@ -1,3 +1,6 @@
+body{
+  text-align: center;
+}
 .scrollable-playlist {
   max-height: 300px; /* Adjust this height as needed */
   overflow-y: auto;
@@ -6,9 +9,14 @@
 #select-songlist{
     width: 18em;
 }
-.select-songlist{
-    text-align: center;
+
+.select-songlist {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+
 #div-buttons{
     margin-top: 1em;
 }
@@ -34,4 +42,31 @@ body{
 .button-active {
     background-color: #4CAF50; /* Green */
     color: white;
+}
+
+fieldset {
+  width: 30%;
+  text-align: center;
+  border: 1px solid #ccc; /* Add a light border to make it visible */
+  padding: 1em;           /* Add some padding for better appearance */
+}
+
+legend {
+  display: block;
+  margin-left: 0.5em; /* Add a small margin to ensure the border doesn't overlap the text */
+  padding: 0 0.5em; /* Padding helps keep the text within a comfortable boundary */
+  white-space: nowrap; /* Prevents text wrapping */
+  width: auto; /* Ensures it automatically adjusts */
+
+  font-weight: bold;      /* Make the legend bold for emphasis */
+}
+
+select{
+  display: block;
+  margin-bottom: 1em;
+}
+
+.wrapper{
+  display: flex;
+  justify-content: center;
 }
