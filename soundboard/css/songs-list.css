@@ -51,6 +51,15 @@ fieldset {
   padding: 1em;           /* Add some padding for better appearance */
 }
 
+@media (max-width: 768px) {
+  fieldset {
+    width: 70%;
+  }
+  #button-removeallsongs{
+    margin-top: 1em;
+}
+}
+
 legend {
   display: block;
   margin-left: 0.5em; /* Add a small margin to ensure the border doesn't overlap the text */
