@@ -1,4 +1,4 @@
-const all_songs = [
+const allSongs = [
    {
        id: 0,
        title: "Be Thou My Vision",

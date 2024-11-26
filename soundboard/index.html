@@ -3,9 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Styles -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
   <link rel="stylesheet" href="https://freesmartphoneapps.com/soundboard/css/styles.css">
   <link rel="stylesheet" href="css/songs-list.css">
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 </head>
 <body>
   <header>
@@ -84,19 +91,19 @@
 
         <div class="row">
           <div class="col-12 mx-auto text-center mt-1">
-          <div class="wrapper">
-            <fieldset>
-              <legend>Edit Songs List</legend>
-              <span class="select-songlist">
+            <div class="wrapper">
+              <fieldset>
+                <legend>Edit Songs List</legend>
+                <span class="select-songlist">
 
-                <select id="select-songlist"></select>
-              </span>
-              <button class="btn btn-primary" id="button-addsong">Add Song</button>
-              <button class="btn btn-primary" id="button-addallsongs">Add All Songs</button>
-              <button class="btn btn-primary" id="button-removeallsongs">Remove All Songs</button>
-            </fieldset>
+                  <select id="select-songlist"></select>
+                </span>
+                <button class="btn btn-primary" id="button-addsong">Add Song</button>
+                <button class="btn btn-primary" id="button-addallsongs">Add All Songs</button>
+                <button class="btn btn-primary" id="button-removeallsongs">Remove All Songs</button>
+              </fieldset>
+            </div>
           </div>
-        </div>
         </div>
   
     </form>
@@ -111,11 +118,9 @@
     </div>
   </footer>
 
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-  <script src="https://freesmartphoneapps.com/soundboard/js/songs-list-pro-songs.js"></script>
-  <script src="https://freesmartphoneapps.com/soundboard/js/songs-userdata-songs.js"></script>
-  <script src="https://freesmartphoneapps.com/soundboard/js/script.js"></script>
+ 
+  <script src="js/songs-list-pro-songs.js"></script>
+  <script src="js/songs-list-classes.js" ></script>
+  <script src="js/script.js"></script>
 </body>
 </html>

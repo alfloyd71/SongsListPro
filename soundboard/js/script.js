@@ -1,55 +1,43 @@
-const button_play = document.getElementById("play")
-const button_pause = document.getElementById("pause")
-const playlist_songs = document.getElementById("playlist-songs")
-const button_next = document.getElementById("next")
-const button_previous = document.getElementById("previous")
-const button_shuffle = document.getElementById("shuffle")
+let songsListInstance
 
-
-const audio = new Audio()
-
-let user_data={
-    songs: [...all_user_data_songs], current_song:null, song_current_time:0, 
+function getCurrentSongIndex(){
+    return songsListInstance.userData?.songs.indexOf(songsListInstance.userData?.current_song)
 }
 
-const getCurrentSongIndex=()=>{
-    return user_data?.songs.indexOf(user_data?.current_song)
-}
-
-const playNextSong=()=>{
-    if(user_data?.current_song===null){
-        playSong(user_data?.songs[0].id)
+function playNextSong(){
+    if(songsListInstance.userData?.current_song===null){
+        playSong(songsListInstance.userData?.songs[0].id)
     }
     else{
         const current_song_index = getCurrentSongIndex()
-        const next_song = user_data?.songs[current_song_index+1]
+        const next_song = songsListInstance.userData?.songs[current_song_index+1]
         playSong(next_song.id)
     }
 }
 
-const playPreviousSong=()=>{
-    if(user_data?.current_song===null){
+function playPreviousSong(){
+    if(songsListInstance.userData?.current_song===null){
         return
     }
     else{
         const current_song_index = getCurrentSongIndex()
-        const previous_song = user_data?.songs[current_song_index-1]
+        const previous_song = songsListInstance.userData?.songs[current_song_index-1]
         playSong(previous_song.id)
     }
 }
 
-const setPlayerDisplay=()=>{
+function setPlayerDisplay(){
   const song_title=document.getElementById("player-song-title")
   const song_artist=document.getElementById("player-song-artist")
-  const current_title=user_data?.current_song?.title
-  const current_artist=user_data?.current_song?.artist  
+  const current_title=songsListInstance.userData?.current_song?.title
+  const current_artist=songsListInstance.userData?.current_song?.artist  
   song_title.textContent=current_title?current_title:""
   song_artist.textContent=current_artist?current_artist:""
 }
 
-const highlightCurrentSong=()=>{
+function highlightCurrentSong(){
     const playlist_song_elements=document.querySelectorAll(".playlist-song")
-    const songto_highlight=document.getElementById(`song-${user_data?.current_song?.id}`)
+    const songto_highlight=document.getElementById(`song-${songsListInstance.userData?.current_song?.id}`)
 
     playlist_song_elements.forEach((songEl)=>{
         songEl.removeAttribute("aria-current")
@@ -60,60 +48,58 @@ const highlightCurrentSong=()=>{
     }
 }
 
-const setPlayButtonAccessibleText = () => {
-    const song = user_data?.currentSong || user_data?.songs[0];
-    button_play.setAttribute("aria-label", song?.title ?`Play ${song.title}`:"Play")
+function setPlayButtonAccessibleText(){
+    const song = songsListInstance.userData?.currentSong || songsListInstance.userData?.songs[0];
+    songsListInstance.buttonPlay.setAttribute("aria-label", song?.title ?`Play ${song.title}`:"Play")
     
   }
 
-const shuffle=()=>{
+function shuffle(){
     // returns negative and positive random sorted numbers
-    user_data?.songs.sort(()=>Math.random()-0.5)
-    user_data.current_song=null
-    user_data.song_current_time=0
-    renderSongs(user_data?.songs)
+    songsListInstance.userData?.songs.sort(()=>Math.random()-0.5)
+    songsListInstance.userData.current_song=null
+    songsListInstance.userData.song_current_time=0
+    renderSongs(songsListInstance.userData?.songs)
     pauseSong()
     setPlayerDisplay()
     setPlayButtonAccessibleText()
 }
 
-const deleteSong=(id)=>{
-    if(user_data?.current_song?.id===id){
-        user_data.current_song=null
-        user_data.song_current_time=0
+function deleteSong(id){
+    if(songsListInstance.userData?.current_song?.id===id){
+        songsListInstance.userData.current_song=null
+        songsListInstance.userData.song_current_time=0
         pauseSong()
         setPlayerDisplay()
     }
         // exclude a song or delete a song if song.id===id
-        user_data.songs = user_data?.songs.filter((song)=>song.id!==id)
-        custom_songs = custom_songs?.filter((song)=>song.id!==id)
-        // custom_songs = custom_songs?.filter((song)=>song.id!==id)
-        renderSongs(user_data?.songs)
+        songsListInstance.userData.songs = songsListInstance.userData?.songs.filter((song)=>song.id!==id)
+        songsListInstance.customSongs = songsListInstance.customSongs?.filter((song)=>song.id!==id)
+        // songsListInstance.customSongs = songsListInstance.customSongs?.filter((song)=>song.id!==id)
+        renderSongs(songsListInstance.userData?.songs)
         highlightCurrentSong()
         setPlayButtonAccessibleText()
 }
 
-button_shuffle.addEventListener("click",shuffle)
-
-const playSong = (id) => {
-  button_play.classList.remove('button-active');
-  button_pause.classList.add('button-active');
-  const song = user_data?.songs.find((song) => song.id === id);
+function playSong(id){
+  songsListInstance.buttonPlay.classList.remove('button-active');
+  songsListInstance.buttonPause.classList.add('button-active');
+  const song = songsListInstance.userData?.songs.find((song) => song.id === id);
 
   if (song) {
-      audio.src = song?.src;
-      audio.title = song?.title;
+      songsListInstance.audio.src = song?.src;
+      songsListInstance.audio.title = song?.title;
 
-      // Wait for the audio to be fully loaded before playing
-      audio.addEventListener('canplaythrough', () => {
-          if (user_data?.current_song === null || user_data?.current_song?.id !== song.id) {
-              audio.currentTime = 0;
+      // Wait for the songsListInstance.audio to be fully loaded before playing
+      songsListInstance.audio.addEventListener('canplaythrough', () => {
+          if (songsListInstance.userData?.current_song === null || songsListInstance.userData?.current_song?.id !== song.id) {
+              songsListInstance.audio.currentTime = 0;
           } else {
-              audio.currentTime = user_data?.song_current_time;
+              songsListInstance.audio.currentTime = songsListInstance.userData?.song_current_time;
           }
-          user_data.current_song = song;
-          button_play.classList.add("playing");
-          audio.play().catch(error => {
+          songsListInstance.userData.current_song = song;
+          songsListInstance.buttonPlay.classList.add("playing");
+          songsListInstance.audio.play().catch(error => {
               console.error('Error playing audio:', error);
           });
           highlightCurrentSong();
@@ -121,85 +107,23 @@ const playSong = (id) => {
       }, { once: true });
 
       // Remove the previous 'canplaythrough' event listener
-      audio.load();
+      songsListInstance.audio.load();
   } else {
       return;
   }
 };
 
-
-/*const playSong=(id)=>{
-    button_play.classList.remove('button-active')
-    button_pause.classList.add('button-active')
-    const song = user_data?.songs.find((song)=>song.id===id)
-    if(song){
-      audio.src = song?.src
-      audio.title = song?.title
-    
-        if(user_data?.current_song===null || user_data?.current_song?.id!==song.id){
-          audio.currentTime=0
-        }
-        else{
-            audio.currentTime=user_data?.song_current_time
-        }
-        // no need to verify that current_song exists - user_data?.current_song=song
-        user_data.current_song=song
-        button_play.classList.add("playing")
-        audio.play()
-        highlightCurrentSong()
-        setPlayerDisplay()
-    }
-    else{
-        return
-    }
-        
+function pauseSong(){
+    songsListInstance.userData.song_current_time=songsListInstance.audio.currentTime
+    songsListInstance.buttonPause.classList.remove('button-active')
+    songsListInstance.buttonPlay.classList.add('button-active')
    
-}
-*/
-
-const pauseSong=()=>{
-    user_data.song_current_time=audio.currentTime
-    button_pause.classList.remove('button-active')
-    button_play.classList.add('button-active')
-   
-    button_play.classList.remove("playing")
-    audio.pause()
+    songsListInstance.buttonPlay.classList.remove("playing")
+    songsListInstance.audio.pause()
 
 }
 
-// event listeners
-button_play.addEventListener("click",(event)=>{
-    
-    if(!user_data?.current_song){
-        playSong(user_data?.songs[0]?.id)
-    }
-    else{
-        playSong(user_data?.current_song?.id)
-    }
-})
-
-button_pause.addEventListener("click", pauseSong)
-button_next.addEventListener("click", playNextSong)
-button_previous.addEventListener("click", playPreviousSong)
-
-// event listener for the audio element
-audio.addEventListener("ended",()=>{
-    const current_song_index=getCurrentSongIndex()
-    const next_song_exists=current_song_index<user_data?.songs.length-1
-    if(next_song_exists){
-        playNextSong()
-    }
-    else{
-        user_data.current_song=null
-        user_data.song_current_time=0
-        pauseSong()
-        setPlayerDisplay()
-        highlightCurrentSong()
-        setPlayButtonAccessibleText()
-    }
-})
-
-const renderSongs=(array)=>{
+function renderSongs(array){
     const songsHTML = array.map((song)=>{
         return `<li id="song-${song.id}" class="playlist-song">
         <button onclick="playSong(${song.id})" class="playlist-song-info">
@@ -210,12 +134,12 @@ const renderSongs=(array)=>{
         `
     }).join("")
 
-    playlist_songs.innerHTML=songsHTML
+    songsListInstance.playlistSongs.innerHTML=songsHTML
 
 }
 
-const sortSongs=()=>{
-    user_data?.songs.sort((a,b)=>{
+function sortSongs(){
+    songsListInstance.userData?.songs.sort((a,b)=>{
         if(a.title<b.title){
             return -1
         }
@@ -226,47 +150,68 @@ const sortSongs=()=>{
             return 0
         }
     })
-    return user_data?.songs
+    return songsListInstance.userData?.songs
 }
 
-const addAllSongs = () =>{
-    user_data.songs = all_songs;
-    //custom_songs = all_songs
+function addAllSongs(){
+    songsListInstance.userData.songs = songsListInstance.allSongs;
+    //songsListInstance.customSongs = songsListInstance.allSongs
     renderSongs(sortSongs());
 }
 
-const select_songlist = document.getElementById("select-songlist")
-const button_addsong = document.getElementById("button-addsong")
-const button_addallsongs = document.getElementById("button-addallsongs")
-const button_removeallsongs = document.getElementById("button-removeallsongs")
+function registerEventListeners(){
+  songsListInstance.buttonShuffle.addEventListener("click",shuffle)
+  songsListInstance.buttonPause.addEventListener("click", pauseSong)
+  songsListInstance.buttonNext.addEventListener("click", playNextSong)
+  songsListInstance.buttonPrevious.addEventListener("click", playPreviousSong)
 
-let custom_songs = []
-let song_selected_id=parseInt(0)
-let song_to_be_added={}
+  // event listeners
+  songsListInstance.buttonPlay.addEventListener("click",(event)=>{
+    
+    if(!songsListInstance.userData?.current_song){
+        playSong(songsListInstance.userData?.songs[0]?.id)
+    }
+    else{
+        playSong(songsListInstance.userData?.current_song?.id)
+    }
+  })
+
+//songsListInstance.userData.songs=songsListInstance.allSongs
+songsListInstance.allSongs.forEach((song) => {
+  if(songsListInstance.selectSongList){
+    songsListInstance.selectSongList.innerHTML += `<option class="option-song" id="${song.id}">${song.title}</option>`;
+  }
+});
+addAllSongs()
+
+let customSongs = []
+let songSelectedId=parseInt(0)
+let songToBeAdded={}
 
 // Add onchange event listener
-select_songlist.addEventListener("change", function() {
+songsListInstance.selectSongList.addEventListener("change", function() {
     // Get the selected option
-    const selected_option = this.options[this.selectedIndex];
+    const selectedOption = this.options[this.selectedIndex];
     
     // Get the value and text of the selected option
-    const selected_value = selected_option.value;
-    const selected_text = selected_option.text;
-    const selected_id = selected_option.id
+    const selectedValue = selectedOption.value;
+    const selectedText = selectedOption.text;
+    const selectedId = selectedOption.id
     
     // You can perform further actions here based on the selected option
-    song_selected_id = parseInt(selected_id)
+    songSelectedId = parseInt(selectedId)
   });
 
-button_addsong.addEventListener("click", (event) => {
+  buttonAddSong = document.querySelector('#button-addsong')
+  buttonAddSong.addEventListener("click", (event) => {
     event.preventDefault();
 
     const option_songs = Array.from(document.getElementsByClassName("option-song"))
     option_songs.sort((a, b) => a.innerHTML.localeCompare(b.innerHTML))
-    custom_songs=[...user_data?.songs]
-    all_songs.filter((song) => {
+    custom_songs=[...songsListInstance.userData?.songs]
+    songsListInstance.allSongs.filter((song) => {
         for (let i = 0; i < option_songs.length; i++) {
-            if (parseInt(song.id) === parseInt(song_selected_id)) {
+            if (parseInt(song.id) === parseInt(songSelectedId)) {
                 song_to_be_added = {
                     id: song?.id,
                     title: song?.title,
@@ -282,8 +227,8 @@ button_addsong.addEventListener("click", (event) => {
     });
 
     let match=false
-    user_data?.songs.map((song)=>{
-      if(song.id ===song_selected_id){
+    songsListInstance?.userData?.songs.map((song)=>{
+      if(song.id ===songSelectedId){
         match=true
         return
 
@@ -311,28 +256,29 @@ button_addsong.addEventListener("click", (event) => {
   });
 
   // Update user_data.songs with unique songs and render them
-  user_data.songs = unique_songs;
-  renderSongs(user_data?.songs);
+  songsListInstance.userData.songs = unique_songs;
+  renderSongs(songsListInstance.userData.songs);
 }
   // endif allsongsadded
     
-});
+});  
 
-button_addallsongs.addEventListener("click", (event)=>{
+
+songsListInstance.buttonAddAllSongs.addEventListener("click", (event)=>{
     event.preventDefault()
     addAllSongs()
 })
 
-button_removeallsongs.addEventListener("click", (event)=>{
+songsListInstance.buttonRemoveAllSongs.addEventListener("click", (event)=>{
     event.preventDefault()
-    const comfirm_removal=window.confirm("remove all songs from the playlist?")
-    if(comfirm_removal){
-      user_data.current_song=null
-      user_data.song_current_time=0  
-      user_data.songs = []
+    const comfirmRemoval=window.confirm("remove all songs from the playlist?")
+    if(comfirmRemoval){
+      songsListInstance.userData.currentSong=null
+      songsListInstance.userData.songCurrentTime=0  
+      songsListInstance.userData.songs = []
       pauseSong()
       setPlayerDisplay()
-      renderSongs(user_data?.songs)
+      renderSongs(songsListInstance.userData?.songs)
       highlightCurrentSong()
       setPlayButtonAccessibleText()
       
@@ -342,12 +288,27 @@ button_removeallsongs.addEventListener("click", (event)=>{
     }
 })
 
+// event listener for the songsListInstance.audio element
+songsListInstance.audio.addEventListener("ended",()=>{
+  const currentSongIndex=getCurrentSongIndex()
+  const nextSongExists=currentSongIndex<songsListInstance.userData?.songs.length-1
+  if(nextSongExists){
+      playNextSong()
+  }
+  else{
+      songsListInstance.userData.currentSong=null
+      songsListInstance.userData.songCurrentTime=0
+      pauseSong()
+      setPlayerDisplay()
+      highlightCurrentSong()
+      setPlayButtonAccessibleText()
+  }
+})
 
+// end registerEventListeners()
+}
 
-window.onload = () => {
-    //user_data.songs=all_songs
-    all_songs.forEach((song) => {
-        select_songlist.innerHTML += `<option class="option-song" id="${song.id}">${song.title}</option>`;
-    });
-    addAllSongs()
-};
+window.addEventListener('load',()=>{
+  songsListInstance = new SongsListGlobals(allSongs)
+  registerEventListeners()
+})
