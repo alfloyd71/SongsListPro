@@ -1,43 +1,43 @@
 let songsListInstance
 
 function getCurrentSongIndex(){
-    return songsListInstance.userData?.songs.indexOf(songsListInstance.userData?.current_song)
+    return songsListInstance.userData?.songs.indexOf(songsListInstance.userData?.currentSong)
 }
 
 function playNextSong(){
-    if(songsListInstance.userData?.current_song===null){
+    if(songsListInstance.userData?.currentSong===null){
         playSong(songsListInstance.userData?.songs[0].id)
     }
     else{
-        const current_song_index = getCurrentSongIndex()
-        const next_song = songsListInstance.userData?.songs[current_song_index+1]
+        const currentSong_index = getCurrentSongIndex()
+        const next_song = songsListInstance.userData?.songs[currentSong_index+1]
         playSong(next_song.id)
     }
 }
 
 function playPreviousSong(){
-    if(songsListInstance.userData?.current_song===null){
+    if(songsListInstance.userData?.currentSong===null){
         return
     }
     else{
-        const current_song_index = getCurrentSongIndex()
-        const previous_song = songsListInstance.userData?.songs[current_song_index-1]
+        const currentSong_index = getCurrentSongIndex()
+        const previous_song = songsListInstance.userData?.songs[currentSong_index-1]
         playSong(previous_song.id)
     }
 }
 
 function setPlayerDisplay(){
-  const song_title=document.getElementById("player-song-title")
-  const song_artist=document.getElementById("player-song-artist")
-  const current_title=songsListInstance.userData?.current_song?.title
-  const current_artist=songsListInstance.userData?.current_song?.artist  
-  song_title.textContent=current_title?current_title:""
-  song_artist.textContent=current_artist?current_artist:""
+  const songTitle=document.getElementById("player-song-title")
+  const songArtist=document.getElementById("player-song-artist")
+  const current_title=songsListInstance.userData?.currentSong?.title
+  const current_artist=songsListInstance.userData?.currentSong?.artist  
+  songTitle.textContent=current_title?current_title:""
+  songArtist.textContent=current_artist?current_artist:""
 }
 
 function highlightCurrentSong(){
     const playlist_song_elements=document.querySelectorAll(".playlist-song")
-    const songto_highlight=document.getElementById(`song-${songsListInstance.userData?.current_song?.id}`)
+    const songto_highlight=document.getElementById(`song-${songsListInstance.userData?.currentSong?.id}`)
 
     playlist_song_elements.forEach((songEl)=>{
         songEl.removeAttribute("aria-current")
@@ -57,7 +57,7 @@ function setPlayButtonAccessibleText(){
 function shuffle(){
     // returns negative and positive random sorted numbers
     songsListInstance.userData?.songs.sort(()=>Math.random()-0.5)
-    songsListInstance.userData.current_song=null
+    songsListInstance.userData.currentSong=null
     songsListInstance.userData.song_current_time=0
     renderSongs(songsListInstance.userData?.songs)
     pauseSong()
@@ -66,8 +66,8 @@ function shuffle(){
 }
 
 function deleteSong(id){
-    if(songsListInstance.userData?.current_song?.id===id){
-        songsListInstance.userData.current_song=null
+    if(songsListInstance.userData?.currentSong?.id===id){
+        songsListInstance.userData.currentSong=null
         songsListInstance.userData.song_current_time=0
         pauseSong()
         setPlayerDisplay()
@@ -82,8 +82,16 @@ function deleteSong(id){
 }
 
 function playSong(id){
-  songsListInstance.buttonPlay.classList.remove('button-active');
-  songsListInstance.buttonPause.classList.add('button-active');
+  if (songsListInstance.userData.currentSong) {
+    songsListInstance.buttonPlay.classList.remove('button-active');
+    songsListInstance.buttonPause.classList.add('button-active');
+  }
+
+  else{
+    songsListInstance.buttonPause.classList.remove('button-active')
+    songsListInstance.buttonPlay.classList.remove('button-active')
+  }
+
   const song = songsListInstance.userData?.songs.find((song) => song.id === id);
 
   if (song) {
@@ -92,12 +100,12 @@ function playSong(id){
 
       // Wait for the songsListInstance.audio to be fully loaded before playing
       songsListInstance.audio.addEventListener('canplaythrough', () => {
-          if (songsListInstance.userData?.current_song === null || songsListInstance.userData?.current_song?.id !== song.id) {
+          if (songsListInstance.userData?.currentSong === null || songsListInstance.userData?.currentSong?.id !== song.id) {
               songsListInstance.audio.currentTime = 0;
           } else {
               songsListInstance.audio.currentTime = songsListInstance.userData?.song_current_time;
           }
-          songsListInstance.userData.current_song = song;
+          songsListInstance.userData.currentSong = song;
           songsListInstance.buttonPlay.classList.add("playing");
           songsListInstance.audio.play().catch(error => {
               console.error('Error playing audio:', error);
@@ -115,8 +123,16 @@ function playSong(id){
 
 function pauseSong(){
     songsListInstance.userData.song_current_time=songsListInstance.audio.currentTime
-    songsListInstance.buttonPause.classList.remove('button-active')
-    songsListInstance.buttonPlay.classList.add('button-active')
+
+    if (songsListInstance.userData.currentSong) {
+      songsListInstance.buttonPause.classList.remove('button-active')
+      songsListInstance.buttonPlay.classList.add('button-active')
+    }
+
+    else{
+      songsListInstance.buttonPause.classList.remove('button-active')
+      songsListInstance.buttonPlay.classList.remove('button-active')
+    }
    
     songsListInstance.buttonPlay.classList.remove("playing")
     songsListInstance.audio.pause()
@@ -168,11 +184,11 @@ function registerEventListeners(){
   // event listeners
   songsListInstance.buttonPlay.addEventListener("click",(event)=>{
     
-    if(!songsListInstance.userData?.current_song){
+    if(!songsListInstance.userData?.currentSong){
         playSong(songsListInstance.userData?.songs[0]?.id)
     }
     else{
-        playSong(songsListInstance.userData?.current_song?.id)
+        playSong(songsListInstance.userData?.currentSong?.id)
     }
   })
 
@@ -276,9 +292,16 @@ songsListInstance.buttonRemoveAllSongs.addEventListener("click", (event)=>{
       songsListInstance.userData.currentSong=null
       songsListInstance.userData.songCurrentTime=0  
       songsListInstance.userData.songs = []
+      const songTitle=document.getElementById("player-song-title")
+      const songArtist=document.getElementById("player-song-artist")
+      songTitle.textContent=""
+      songArtist.textContent=""
+      
+  
+      console.log(songsListInstance.buttonPlay.classList)
       pauseSong()
       setPlayerDisplay()
-      renderSongs(songsListInstance.userData?.songs)
+      renderSongs([])
       highlightCurrentSong()
       setPlayButtonAccessibleText()
       
