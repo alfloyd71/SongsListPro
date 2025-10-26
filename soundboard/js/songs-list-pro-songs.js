@@ -4,7 +4,7 @@ const allSongs = [
        title: "Be Thou My Vision",
        artist: "EBF Hymns",
        duration: "3:04",
-       src: "https://freesmartphoneapps.com/soundboard/songs-list/be-thou-my-vision.mp3",
+       src: "https://freesmartphoneapps.com/songs/be-thou-my-vision.mp3",
    },
    
     {
@@ -12,21 +12,21 @@ const allSongs = [
        title: "Bringing in the Sheaves",
        artist: "EBF Hymns",
        duration: "2:51",
-       src: "https://freesmartphoneapps.com/soundboard/songs-list/bringing-in-the-sheaves.mp3",
+       src: "https://freesmartphoneapps.com/songs/bringing-in-the-sheaves.mp3",
     },
     {
       id: 2,
-      title: "Channels Only",
+      title: "Blessed Assurance",
       artist: "EBF Hymns",
-      duration: "3:33",
-      src: "https://freesmartphoneapps.com/soundboard/songs-list/channels-only.mp3",
+      duration: "3:18",
+      src: "https://freesmartphoneapps.com/songs/blessed-assurance.mp3",
     },
     {
       id: 3,
       title: "Amazing Grace",
       artist: "EBF Hymns",
       duration: "3:49",
-      src: "https://freesmartphoneapps.com/soundboard/songs-list/amazing-grace.mp3",
+      src: "https://freesmartphoneapps.com/songs/amazing-grace.mp3",
    },
   
 
