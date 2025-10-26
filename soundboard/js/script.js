@@ -1,337 +1,211 @@
-let songsListInstance
+let songsListInstance;
 
-function getCurrentSongIndex(){
-    return songsListInstance.userData?.songs.indexOf(songsListInstance.userData?.currentSong)
+function getCurrentSongIndex() {
+  return songsListInstance.userData?.songs.indexOf(songsListInstance.userData?.currentSong);
 }
 
-function playNextSong(){
-    if(songsListInstance.userData?.currentSong===null){
-        playSong(songsListInstance.userData?.songs[0].id)
-    }
-    else{
-        const currentSong_index = getCurrentSongIndex()
-        const next_song = songsListInstance.userData?.songs[currentSong_index+1]
-        playSong(next_song.id)
-    }
-}
-
-function playPreviousSong(){
-    if(songsListInstance.userData?.currentSong===null){
-        return
-    }
-    else{
-        const currentSong_index = getCurrentSongIndex()
-        const previous_song = songsListInstance.userData?.songs[currentSong_index-1]
-        playSong(previous_song.id)
-    }
-}
-
-function setPlayerDisplay(){
-  const songTitle=document.getElementById("player-song-title")
-  const songArtist=document.getElementById("player-song-artist")
-  const current_title=songsListInstance.userData?.currentSong?.title
-  const current_artist=songsListInstance.userData?.currentSong?.artist  
-  songTitle.textContent=current_title?current_title:""
-  songArtist.textContent=current_artist?current_artist:""
-}
-
-function highlightCurrentSong(){
-    const playlist_song_elements=document.querySelectorAll(".playlist-song")
-    const songto_highlight=document.getElementById(`song-${songsListInstance.userData?.currentSong?.id}`)
-
-    playlist_song_elements.forEach((songEl)=>{
-        songEl.removeAttribute("aria-current")
-    })
-
-    if(songto_highlight){
-        songto_highlight.setAttribute("aria-current","true")
-    }
-}
-
-function setPlayButtonAccessibleText(){
-    const song = songsListInstance.userData?.currentSong || songsListInstance.userData?.songs[0];
-    songsListInstance.buttonPlay.setAttribute("aria-label", song?.title ?`Play ${song.title}`:"Play")
-    
-  }
-
-function shuffle(){
-    // returns negative and positive random sorted numbers
-    songsListInstance.userData?.songs.sort(()=>Math.random()-0.5)
-    songsListInstance.userData.currentSong=null
-    songsListInstance.userData.song_current_time=0
-    renderSongs(songsListInstance.userData?.songs)
-    pauseSong()
-    setPlayerDisplay()
-    setPlayButtonAccessibleText()
-}
-
-function deleteSong(id){
-    if(songsListInstance.userData?.currentSong?.id===id){
-        songsListInstance.userData.currentSong=null
-        songsListInstance.userData.song_current_time=0
-        pauseSong()
-        setPlayerDisplay()
-    }
-        // exclude a song or delete a song if song.id===id
-        songsListInstance.userData.songs = songsListInstance.userData?.songs.filter((song)=>song.id!==id)
-        songsListInstance.customSongs = songsListInstance.customSongs?.filter((song)=>song.id!==id)
-        // songsListInstance.customSongs = songsListInstance.customSongs?.filter((song)=>song.id!==id)
-        renderSongs(songsListInstance.userData?.songs)
-        highlightCurrentSong()
-        setPlayButtonAccessibleText()
-}
-
-function playSong(id){
-  if (songsListInstance.userData.currentSong) {
-    songsListInstance.buttonPlay.classList.remove('button-active');
-    songsListInstance.buttonPause.classList.add('button-active');
-  }
-
-  else{
-    songsListInstance.buttonPause.classList.remove('button-active')
-    songsListInstance.buttonPlay.classList.remove('button-active')
-  }
-
-  const song = songsListInstance.userData?.songs.find((song) => song.id === id);
-
-  if (song) {
-      songsListInstance.audio.src = song?.src;
-      songsListInstance.audio.title = song?.title;
-
-      // Wait for the songsListInstance.audio to be fully loaded before playing
-      songsListInstance.audio.addEventListener('canplaythrough', () => {
-          if (songsListInstance.userData?.currentSong === null || songsListInstance.userData?.currentSong?.id !== song.id) {
-              songsListInstance.audio.currentTime = 0;
-          } else {
-              songsListInstance.audio.currentTime = songsListInstance.userData?.song_current_time;
-          }
-          songsListInstance.userData.currentSong = song;
-          songsListInstance.buttonPlay.classList.add("playing");
-          songsListInstance.audio.play().catch(error => {
-              console.error('Error playing audio:', error);
-          });
-          highlightCurrentSong();
-          setPlayerDisplay();
-      }, { once: true });
-
-      // Remove the previous 'canplaythrough' event listener
-      songsListInstance.audio.load();
+function playNextSong() {
+  if (!songsListInstance.userData?.currentSong) {
+    playSong(songsListInstance.userData?.songs[0]?.id);
   } else {
-      return;
+    const i = getCurrentSongIndex();
+    const next = songsListInstance.userData?.songs[i + 1];
+    if (next) playSong(next.id);
   }
-};
-
-function pauseSong(){
-    songsListInstance.userData.song_current_time=songsListInstance.audio.currentTime
-
-    if (songsListInstance.userData.currentSong) {
-      songsListInstance.buttonPause.classList.remove('button-active')
-      songsListInstance.buttonPlay.classList.add('button-active')
-    }
-
-    else{
-      songsListInstance.buttonPause.classList.remove('button-active')
-      songsListInstance.buttonPlay.classList.remove('button-active')
-    }
-   
-    songsListInstance.buttonPlay.classList.remove("playing")
-    songsListInstance.audio.pause()
-
 }
 
-function renderSongs(array){
-    const songsHTML = array.map((song)=>{
-        return `<li id="song-${song.id}" class="playlist-song">
-        <button onclick="playSong(${song.id})" class="playlist-song-info">
-          <span class="playlist-song-title">${song.title}</span><span class="playlist-song-artist">${song.artist}</span><span class="playlist-song-duration">${song.duration}</span>
-        </button>
-        <button onclick="deleteSong(${song.id})" class="playlist-song-delete" aria-label="Delete ${song.title}"><svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="8" fill="#4d4d62"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.32587 5.18571C5.7107 4.90301 6.28333 4.94814 6.60485 5.28651L8 6.75478L9.39515 5.28651C9.71667 4.94814 10.2893 4.90301 10.6741 5.18571C11.059 5.4684 11.1103 5.97188 10.7888 6.31026L9.1832 7.99999L10.7888 9.68974C11.1103 10.0281 11.059 10.5316 10.6741 10.8143C10.2893 11.097 9.71667 11.0519 9.39515 10.7135L8 9.24521L6.60485 10.7135C6.28333 11.0519 5.7107 11.097 5.32587 10.8143C4.94102 10.5316 4.88969 10.0281 5.21121 9.68974L6.8168 7.99999L5.21122 6.31026C4.8897 5.97188 4.94102 5.4684 5.32587 5.18571Z" fill="white"/></svg></button>
-        </li>
-        `
-    }).join("")
-
-    songsListInstance.playlistSongs.innerHTML=songsHTML
-
+function playPreviousSong() {
+  const i = getCurrentSongIndex();
+  const prev = songsListInstance.userData?.songs[i - 1];
+  if (prev) playSong(prev.id);
 }
 
-function sortSongs(){
-    songsListInstance.userData?.songs.sort((a,b)=>{
-        if(a.title<b.title){
-            return -1
-        }
-        if(a.title>b.title){
-            return 1
-        }
-        if(a.title===b.title){
-            return 0
-        }
-    })
-    return songsListInstance.userData?.songs
+function setPlayerDisplay() {
+  const title = document.getElementById("player-song-title");
+  const artist = document.getElementById("player-song-artist");
+  const s = songsListInstance.userData?.currentSong;
+  title.textContent = s?.title || "";
+  artist.textContent = s?.artist || "";
 }
 
-function addAllSongs(){
-    songsListInstance.userData.songs = songsListInstance.allSongs;
-    //songsListInstance.customSongs = songsListInstance.allSongs
-    renderSongs(sortSongs());
+function highlightCurrentSong() {
+  document.querySelectorAll(".playlist-song").forEach(el => el.removeAttribute("aria-current"));
+  const el = document.getElementById(`song-${songsListInstance.userData?.currentSong?.id}`);
+  if (el) el.setAttribute("aria-current", "true");
 }
 
-function registerEventListeners(){
-  songsListInstance.buttonShuffle.addEventListener("click",shuffle)
-  songsListInstance.buttonPause.addEventListener("click", pauseSong)
-  songsListInstance.buttonNext.addEventListener("click", playNextSong)
-  songsListInstance.buttonPrevious.addEventListener("click", playPreviousSong)
+function setPlayButtonAccessibleText() {
+  const s = songsListInstance.userData?.currentSong || songsListInstance.userData?.songs[0];
+  songsListInstance.buttonPlay.setAttribute("aria-label", s?.title ? `Play ${s.title}` : "Play");
+}
 
-  // event listeners
-  songsListInstance.buttonPlay.addEventListener("click",(event)=>{
-    
-    if(!songsListInstance.userData?.currentSong){
-        playSong(songsListInstance.userData?.songs[0]?.id)
-    }
-    else{
-        playSong(songsListInstance.userData?.currentSong?.id)
-    }
-  })
-
-//songsListInstance.userData.songs=songsListInstance.allSongs
-songsListInstance.allSongs.forEach((song) => {
-  if(songsListInstance.selectSongList){
-    songsListInstance.selectSongList.innerHTML += `<option class="option-song" id="${song.id}">${song.title}</option>`;
+// ✅ Save playlist persistently
+function savePlaylistToLocalStorage() {
+  try {
+    const songs = songsListInstance.userData?.songs || [];
+    localStorage.setItem("customPlaylist", JSON.stringify(songs));
+    console.log("✅ Playlist saved:", songs.length, "songs");
+  } catch (err) {
+    console.error("localStorage save error:", err);
   }
-});
-addAllSongs()
+}
 
-let customSongs = []
-let songSelectedId=parseInt(0)
-let songToBeAdded={}
-
-// Add onchange event listener
-songsListInstance.selectSongList.addEventListener("change", function() {
-    // Get the selected option
-    const selectedOption = this.options[this.selectedIndex];
-    
-    // Get the value and text of the selected option
-    const selectedValue = selectedOption.value;
-    const selectedText = selectedOption.text;
-    const selectedId = selectedOption.id
-    
-    // You can perform further actions here based on the selected option
-    songSelectedId = parseInt(selectedId)
-  });
-
-  buttonAddSong = document.querySelector('#button-addsong')
-  buttonAddSong.addEventListener("click", (event) => {
-    event.preventDefault();
-
-    const option_songs = Array.from(document.getElementsByClassName("option-song"))
-    option_songs.sort((a, b) => a.innerHTML.localeCompare(b.innerHTML))
-    custom_songs=[...songsListInstance.userData?.songs]
-    songsListInstance.allSongs.filter((song) => {
-        for (let i = 0; i < option_songs.length; i++) {
-            if (parseInt(song.id) === parseInt(songSelectedId)) {
-                song_to_be_added = {
-                    id: song?.id,
-                    title: song?.title,
-                    artist: song?.artist,
-                    duration: song?.duration,
-                    src: song?.src
-                };
-                custom_songs.push(song_to_be_added);
-                return true;
-            }
-        }
-        return false;
-    });
-
-    let match=false
-    songsListInstance?.userData?.songs.map((song)=>{
-      if(song.id ===songSelectedId){
-        match=true
-        return
-
-      }
-      else{
-        match=false
-        return
-      }
-    })
-
-    if (!match) {
-  // Create a Set to keep track of unique song IDs
-  const unique_songids = new Set();
-  
-  // Filter out duplicate songs based on the song ID
-  const unique_songs = custom_songs?.filter((song) => {
-    // Check if the song ID is already in the Set
-    if (unique_songids.has(song.id)) {
-      return false; // Duplicate, filter it out
-    } else {
-      // Add the song ID to the Set and return true to keep the song
-      unique_songids.add(song.id);
-      return true;
-    }
-  });
-
-  // Update user_data.songs with unique songs and render them
-  songsListInstance.userData.songs = unique_songs;
+function shuffle() {
+  songsListInstance.userData.songs.sort(() => Math.random() - 0.5);
+  songsListInstance.userData.currentSong = null;
+  songsListInstance.userData.song_current_time = 0;
   renderSongs(songsListInstance.userData.songs);
-}
-  // endif allsongsadded
-    
-});  
-
-
-songsListInstance.buttonAddAllSongs.addEventListener("click", (event)=>{
-    event.preventDefault()
-    addAllSongs()
-})
-
-songsListInstance.buttonRemoveAllSongs.addEventListener("click", (event)=>{
-    event.preventDefault()
-    const comfirmRemoval=window.confirm("remove all songs from the playlist?")
-    if(comfirmRemoval){
-      songsListInstance.userData.currentSong=null
-      songsListInstance.userData.songCurrentTime=0  
-      songsListInstance.userData.songs = []
-      const songTitle=document.getElementById("player-song-title")
-      const songArtist=document.getElementById("player-song-artist")
-      songTitle.textContent=""
-      songArtist.textContent=""
-      
-  
-      console.log(songsListInstance.buttonPlay.classList)
-      pauseSong()
-      setPlayerDisplay()
-      renderSongs([])
-      highlightCurrentSong()
-      setPlayButtonAccessibleText()
-      
-    }
-    else{
-      return
-    }
-})
-
-// event listener for the songsListInstance.audio element
-songsListInstance.audio.addEventListener("ended",()=>{
-  const currentSongIndex=getCurrentSongIndex()
-  const nextSongExists=currentSongIndex<songsListInstance.userData?.songs.length-1
-  if(nextSongExists){
-      playNextSong()
-  }
-  else{
-      songsListInstance.userData.currentSong=null
-      songsListInstance.userData.songCurrentTime=0
-      pauseSong()
-      setPlayerDisplay()
-      highlightCurrentSong()
-      setPlayButtonAccessibleText()
-  }
-})
-
-// end registerEventListeners()
+  pauseSong();
+  setPlayerDisplay();
+  setPlayButtonAccessibleText();
+  savePlaylistToLocalStorage();
 }
 
-window.addEventListener('load',()=>{
-  songsListInstance = new SongsListGlobals(allSongs)
-  registerEventListeners()
-})
+function deleteSong(id) {
+  songsListInstance.userData.songs = songsListInstance.userData.songs.filter(s => s.id !== id);
+  if (songsListInstance.userData.currentSong?.id === id) {
+    songsListInstance.userData.currentSong = null;
+    songsListInstance.userData.song_current_time = 0;
+    pauseSong();
+    setPlayerDisplay();
+  }
+  renderSongs(songsListInstance.userData.songs);
+  highlightCurrentSong();
+  setPlayButtonAccessibleText();
+  savePlaylistToLocalStorage();
+}
+
+function playSong(id) {
+  const s = songsListInstance.userData?.songs.find(x => x.id === id);
+  if (!s) return;
+  songsListInstance.audio.src = s.src;
+  songsListInstance.audio.title = s.title;
+
+  songsListInstance.audio.addEventListener('canplaythrough', () => {
+    songsListInstance.audio.currentTime =
+      songsListInstance.userData?.currentSong?.id === s.id
+        ? songsListInstance.userData?.song_current_time
+        : 0;
+    songsListInstance.userData.currentSong = s;
+    songsListInstance.audio.play().catch(console.error);
+    highlightCurrentSong();
+    setPlayerDisplay();
+  }, { once: true });
+  songsListInstance.audio.load();
+}
+
+function pauseSong() {
+  songsListInstance.userData.song_current_time = songsListInstance.audio.currentTime;
+  songsListInstance.audio.pause();
+}
+
+function renderSongs(arr) {
+  songsListInstance.playlistSongs.innerHTML = arr
+    .map(s => `
+    <li id="song-${s.id}" class="playlist-song">
+      <button onclick="playSong(${s.id})" class="playlist-song-info">
+        <span class="playlist-song-title">${s.title}</span>
+        <span class="playlist-song-artist">${s.artist}</span>
+        <span class="playlist-song-duration">${s.duration}</span>
+      </button>
+      <button onclick="deleteSong(${s.id})" class="playlist-song-delete" aria-label="Delete ${s.title}">
+        <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="8" fill="#4d4d62"/>
+          <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M5.3 5.18C5.7 4.9 6.28 4.94 6.6 5.28L8 6.75L9.4 5.28C9.7 4.94 10.29 4.9 10.67 5.18C11.06 5.47 11.11 5.97 10.79 6.31L9.18 8L10.79 9.69C11.11 10.03 11.06 10.53 10.67 10.81C10.29 11.1 9.72 11.05 9.39 10.71L8 9.24L6.6 10.71C6.28 11.05 5.71 11.1 5.33 10.81C4.94 10.53 4.89 10.03 5.21 9.69L6.82 8L5.21 6.31C4.89 5.97 4.94 5.47 5.33 5.18Z" fill="white"/>
+        </svg>
+      </button>
+    </li>`).join("");
+}
+
+function sortSongs() {
+  songsListInstance.userData.songs.sort((a, b) => a.title.localeCompare(b.title));
+  return songsListInstance.userData.songs;
+}
+
+function addAllSongs() {
+  songsListInstance.userData.songs = [...songsListInstance.allSongs];
+  renderSongs(sortSongs());
+  savePlaylistToLocalStorage();
+}
+
+function registerEventListeners() {
+  songsListInstance.buttonShuffle.addEventListener("click", shuffle);
+  songsListInstance.buttonPause.addEventListener("click", pauseSong);
+  songsListInstance.buttonNext.addEventListener("click", playNextSong);
+  songsListInstance.buttonPrevious.addEventListener("click", playPreviousSong);
+
+  songsListInstance.buttonPlay.addEventListener("click", () => {
+    const s = songsListInstance.userData?.currentSong || songsListInstance.userData?.songs[0];
+    if (s) playSong(s.id);
+  });
+
+  // Dropdown songs
+  songsListInstance.allSongs.forEach(s => {
+    songsListInstance.selectSongList.innerHTML += `<option id="${s.id}">${s.title}</option>`;
+  });
+
+  let songSelectedId = 0;
+  songsListInstance.selectSongList.addEventListener("change", function () {
+    songSelectedId = parseInt(this.options[this.selectedIndex].id);
+  });
+
+  document.querySelector('#button-addsong').addEventListener("click", (e) => {
+    e.preventDefault();
+    const s = songsListInstance.allSongs.find(x => x.id === songSelectedId);
+    if (s && !songsListInstance.userData.songs.some(x => x.id === s.id)) {
+      songsListInstance.userData.songs.push(s);
+      renderSongs(songsListInstance.userData.songs);
+      savePlaylistToLocalStorage();
+    }
+  });
+
+  songsListInstance.buttonAddAllSongs.addEventListener("click", (e) => {
+    e.preventDefault();
+    addAllSongs();
+  });
+
+  songsListInstance.buttonRemoveAllSongs.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (confirm("Remove all songs from playlist?")) {
+      songsListInstance.userData.songs = [];
+      renderSongs([]);
+      localStorage.removeItem("customPlaylist");
+      console.log("🗑 Playlist cleared");
+    }
+  });
+
+  songsListInstance.audio.addEventListener("ended", () => {
+    const i = getCurrentSongIndex();
+    if (i < songsListInstance.userData.songs.length - 1) playNextSong();
+    else {
+      songsListInstance.userData.currentSong = null;
+      pauseSong();
+      setPlayerDisplay();
+    }
+  });
+}
+
+window.addEventListener("load", () => {
+  songsListInstance = new SongsListGlobals(allSongs);
+
+  // ✅ Load saved playlist first
+  const saved = localStorage.getItem("customPlaylist");
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        songsListInstance.userData.songs = parsed;
+        console.log("🎵 Loaded saved playlist:", parsed.length);
+      }
+    } catch (err) {
+      console.error("load error:", err);
+    }
+  }
+
+  registerEventListeners();
+  renderSongs(songsListInstance.userData.songs);
+
+  // ✅ Ensure initial save (creates entry if none)
+  savePlaylistToLocalStorage();
+});
