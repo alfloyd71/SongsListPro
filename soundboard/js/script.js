@@ -76,6 +76,16 @@ function deleteSong(id) {
 }
 
 function playSong(id) {
+  if (songsListInstance.userData.currentSong) {
+    songsListInstance.buttonPlay.classList.remove('button-active');
+    songsListInstance.buttonPause.classList.add('button-active');
+  }
+
+  else{
+    songsListInstance.buttonPause.classList.remove('button-active')
+    songsListInstance.buttonPlay.classList.remove('button-active')
+  }
+
   const s = songsListInstance.userData?.songs.find(x => x.id === id);
   if (!s) return;
   songsListInstance.audio.src = s.src;
@@ -94,9 +104,22 @@ function playSong(id) {
   songsListInstance.audio.load();
 }
 
-function pauseSong() {
-  songsListInstance.userData.song_current_time = songsListInstance.audio.currentTime;
-  songsListInstance.audio.pause();
+function pauseSong(){
+    songsListInstance.userData.song_current_time=songsListInstance.audio.currentTime
+
+    if (songsListInstance.userData.currentSong) {
+      songsListInstance.buttonPause.classList.remove('button-active')
+      songsListInstance.buttonPlay.classList.add('button-active')
+    }
+
+    else{
+      songsListInstance.buttonPause.classList.remove('button-active')
+      songsListInstance.buttonPlay.classList.remove('button-active')
+    }
+   
+    songsListInstance.buttonPlay.classList.remove("playing")
+    songsListInstance.audio.pause()
+
 }
 
 function renderSongs(arr) {
