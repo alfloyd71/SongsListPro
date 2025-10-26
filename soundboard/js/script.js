@@ -76,33 +76,50 @@ function deleteSong(id) {
 }
 
 function playSong(id) {
-  if (songsListInstance.userData.currentSong) {
-    songsListInstance.buttonPlay.classList.remove('button-active');
-    songsListInstance.buttonPause.classList.add('button-active');
-  }
-
-  else{
-    songsListInstance.buttonPause.classList.remove('button-active')
-    songsListInstance.buttonPlay.classList.remove('button-active')
-  }
-
   const s = songsListInstance.userData?.songs.find(x => x.id === id);
   if (!s) return;
+
   songsListInstance.audio.src = s.src;
   songsListInstance.audio.title = s.title;
 
-  songsListInstance.audio.addEventListener('canplaythrough', () => {
-    songsListInstance.audio.currentTime =
-      songsListInstance.userData?.currentSong?.id === s.id
-        ? songsListInstance.userData?.song_current_time
-        : 0;
-    songsListInstance.userData.currentSong = s;
-    songsListInstance.audio.play().catch(console.error);
-    highlightCurrentSong();
-    setPlayerDisplay();
-  }, { once: true });
-  songsListInstance.audio.load();
+  // set current song before play
+  songsListInstance.userData.currentSong = s;
+
+  // reset time
+  songsListInstance.audio.currentTime =
+    songsListInstance.userData?.song_current_time && songsListInstance.userData?.currentSong?.id === s.id
+      ? songsListInstance.userData.song_current_time
+      : 0;
+
+  // Immediately reflect state visually
+  songsListInstance.buttonPlay.classList.remove("button-active");
+  songsListInstance.buttonPause.classList.add("button-active");
+
+  // ✅ once audio actually begins playing
+  songsListInstance.audio.addEventListener(
+    "playing",
+    () => {
+      songsListInstance.buttonPlay.classList.remove("button-active");
+      songsListInstance.buttonPause.classList.add("button-active");
+      highlightCurrentSong();
+      setPlayerDisplay();
+    },
+    { once: true }
+  );
+
+  // in case audio pauses later
+  songsListInstance.audio.addEventListener("pause", () => {
+    songsListInstance.buttonPause.classList.remove("button-active");
+    songsListInstance.buttonPlay.classList.add("button-active");
+  });
+
+  songsListInstance.audio.play().catch(err => {
+    console.error("Playback failed:", err);
+    songsListInstance.buttonPause.classList.remove("button-active");
+    songsListInstance.buttonPlay.classList.add("button-active");
+  });
 }
+
 
 function pauseSong(){
     songsListInstance.userData.song_current_time=songsListInstance.audio.currentTime
@@ -231,4 +248,7 @@ window.addEventListener("load", () => {
 
   // ✅ Ensure initial save (creates entry if none)
   savePlaylistToLocalStorage();
+  console.log("Pause button element:", songsListInstance.buttonPause);
+  console.log("Play button element:", songsListInstance.buttonPlay);
+
 });
