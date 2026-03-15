@@ -79,6 +79,26 @@ function playSong(id) {
   const s = songsListInstance.userData?.songs.find(x => x.id === id);
   if (!s) return;
 
+  const previousSongId = songsListInstance.userData?.currentSong?.id;
+
+  songsListInstance.audio.src = s.src;
+  songsListInstance.audio.title = s.title;
+
+  // resume only if same song
+  songsListInstance.audio.currentTime =
+    previousSongId === s.id
+      ? songsListInstance.userData.song_current_time || 0
+      : 0;
+
+  songsListInstance.userData.currentSong = s;
+
+  songsListInstance.audio.play();
+}
+
+function playSongOld(id) {
+  const s = songsListInstance.userData?.songs.find(x => x.id === id);
+  if (!s) return;
+
   songsListInstance.audio.src = s.src;
   songsListInstance.audio.title = s.title;
 
