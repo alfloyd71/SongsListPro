@@ -92,7 +92,33 @@ function playSong(id) {
 
   songsListInstance.userData.currentSong = s;
 
-  songsListInstance.audio.play();
+  // Immediately reflect state visually
+  songsListInstance.buttonPlay.classList.remove("button-active");
+  songsListInstance.buttonPause.classList.add("button-active");
+
+  // ✅ once audio actually begins playing
+  songsListInstance.audio.addEventListener(
+    "playing",
+    () => {
+      songsListInstance.buttonPlay.classList.remove("button-active");
+      songsListInstance.buttonPause.classList.add("button-active");
+      highlightCurrentSong();
+      setPlayerDisplay();
+    },
+    { once: true }
+  );
+
+  // in case audio pauses later
+  songsListInstance.audio.addEventListener("pause", () => {
+    songsListInstance.buttonPause.classList.remove("button-active");
+    songsListInstance.buttonPlay.classList.add("button-active");
+  });
+
+  songsListInstance.audio.play().catch(err => {
+    console.error("Playback failed:", err);
+    songsListInstance.buttonPause.classList.remove("button-active");
+    songsListInstance.buttonPlay.classList.add("button-active");
+  });
 }
 
 function playSongOld(id) {
