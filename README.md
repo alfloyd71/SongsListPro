@@ -214,7 +214,6 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 
 ## Acknowledgments
 
-- Icons by [Lucide](https://lucide.dev/)
 - Design inspiration from modern music streaming interfaces
 - Accessibility patterns from [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/)
 
