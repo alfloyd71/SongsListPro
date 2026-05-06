@@ -75,6 +75,16 @@ soundboard/
 └── README.md
 ```
 
+## Audio Files Disclaimer
+
+**Important:** Ensure you have the rights to use and distribute any audio files included in your playlists. This application is a player/organizer tool only. The user is solely responsible for:
+
+- Obtaining proper licenses for any copyrighted music
+- Ensuring compliance with local copyright laws
+- Respecting the intellectual property rights of artists and content creators
+
+Do not distribute copyrighted audio files without proper authorization from the rights holders.
+
 ---
 
 ## Configuration
