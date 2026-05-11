@@ -461,23 +461,10 @@ function registerEventListeners() {
   });
 }
 
-// ===== Album Art Initialization =====
-function initRandomAlbumArt() {
-  const albumImage = document.getElementById('album-image');
-  if (albumImage && typeof getRandomAlbumArt === 'function') {
-    const randomArt = getRandomAlbumArt();
-    albumImage.src = randomArt;
-    albumImage.alt = 'Album artwork';
-  }
-}
-
 // ===== Initialization =====
 window.addEventListener("load", () => {
   // Initialize theme first
   initTheme();
-  
-  // Initialize random album art
-  initRandomAlbumArt();
   
   // Initialize player
   songsListInstance = new SongsListGlobals(allSongs);

@@ -18,6 +18,7 @@ A modern, customizable music playlist player designed for website owners who wan
 - **Glassmorphism UI** - Modern frosted glass aesthetic with gradient accents
 - **Smooth Animations** - Polished transitions and hover effects
 - **Responsive Layout** - Optimized for desktop, tablet, and mobile devices
+- **Random Album Art** - Display randomized album artwork on each page load, or set a single image for playlist-specific branding
 
 ### Accessibility
 - **WCAG 2.1 Compliant** - Full keyboard navigation and screen reader support
@@ -69,7 +70,8 @@ soundboard/
 ├── js/
 │   ├── script.js           # Core player logic and UI interactions
 │   ├── songsListClasses.js # SongsList class definition
-│   └── songsListProSongs.js # Song data configuration
+│   ├── songsListProSongs.js # Song data configuration
+│   └── albumArtConfig.js   # Random album art configuration
 ├── audio/                  # Your audio files (mp3, wav, ogg)
 ├── images/                 # Album art and icons
 └── README.md
@@ -88,6 +90,39 @@ Do not distribute copyrighted audio files without proper authorization from the 
 ---
 
 ## Configuration
+
+### Random Album Art
+
+Customize the album artwork displayed on each page load by editing `js/albumArtConfig.js`:
+
+```javascript
+const albumArtImages = [
+  'images/album-art/artwork1.webp',
+  'images/album-art/artwork2.webp',
+  'images/album-art/artwork3.webp',
+  // Add as many images as you like...
+];
+```
+
+**How it works:**
+- **Multiple images** - Add any number of image paths to the array. A random image is selected on each page load.
+- **Single image** - For playlist-specific branding, include only one image in the array. It will always display that image.
+- **Supported formats** - WEBP, PNG, JPG, GIF, or any browser-supported image format.
+
+```javascript
+// Example: Playlist-specific single image
+const albumArtImages = [
+  'images/album-art/jazz-collection.webp'
+];
+
+// Example: Randomized artwork pool
+const albumArtImages = [
+  'images/album-art/abstract1.webp',
+  'images/album-art/abstract2.webp',
+  'images/album-art/gradient1.webp',
+  'images/album-art/nature1.webp'
+];
+```
 
 ### Adding Categories
 
