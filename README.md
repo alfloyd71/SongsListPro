@@ -2,6 +2,14 @@
 
 A modern, customizable music playlist player designed for website owners who want to embed beautiful, fully-featured audio experiences into their sites.
 
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#demo">Demo</a> •
+  <a href="#usage">Usage</a> •
+  <a href="#project-structure">Project Structure</a> •
+  <a href="#license">License</a>
+</p>
+
 ![App Screenshot](https://freesmartphoneapps.com/images/songs-list-pro/songs-list-pro-screenshot1.png)
 
 ## Features
@@ -26,6 +34,14 @@ A modern, customizable music playlist player designed for website owners who wan
 - **Focus Management** - Visible focus indicators for keyboard users
 - **Reduced Motion** - Respects user motion preferences
 - **Skip Links** - Quick navigation for screen reader users
+
+---
+
+## Demo
+
+Explore the features of the Songs List Pro App by checking out our live demo:
+
+**[View Live Demo](https://freesmartphoneapps.com/soundboard/)**
 
 ---
 
@@ -55,9 +71,6 @@ const songsData = [
   // Add more songs...
 ];
 ```
-
-```
-
 ---
 
 ## Project Structure
