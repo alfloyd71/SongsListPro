@@ -10,7 +10,10 @@ A modern, customizable music playlist player designed for website owners who wan
   <a href="#license">License</a>
 </p>
 
-![App Screenshot](https://freesmartphoneapps.com/images/songs-list-pro/songs-list-pro-screenshot1.png)
+## Screenshots
+<p align="center">
+  <img src="https://freesmartphoneapps.com/soundboard/images/screenshots/album-art.jpg" alt="Album Art" width="300">&nbsp;&nbsp;<img src="https://freesmartphoneapps.com/soundboard/images/screenshots/song-library.jpg" alt="Song Library" width="300">
+</p>
 
 ## Features
 
@@ -72,6 +75,33 @@ const songsData = [
 ];
 ```
 ---
+
+## Usage
+
+### Running Locally
+
+Since this is a vanilla JavaScript application with no build step required, you can run it directly:
+
+### Player Controls
+
+- **Play/Pause** - Click the center play button or press `Space`
+- **Next/Previous** - Use the skip buttons or `ArrowRight`/`ArrowLeft` keys
+- **Shuffle** - Click the shuffle button to randomize playback order
+- **Volume** - Click the volume icon to show the slider, or use `ArrowUp`/`ArrowDown` keys
+- **Mute** - Press `M` to toggle mute
+- **Seek** - Click anywhere on the progress bar to jump to that position
+
+### Managing Your Playlist
+
+1. **Add individual songs** - Select a song from the "Song Library" dropdown and click "Add Song"
+2. **Add all songs** - Click "Add All" to add the entire library to your playlist
+3. **Remove songs** - Click the trash icon on any song in the playlist
+4. **Clear playlist** - Click "Clear All" to remove all songs
+5. **Search** - Use the search box to filter songs by title or artist
+
+### Theme Switching
+
+Click the sun/moon icon in the top-right corner to toggle between dark and light modes. Your preference is saved to localStorage and persists across sessions.
 
 ## Project Structure
 
