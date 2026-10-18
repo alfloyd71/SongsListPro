@@ -23,15 +23,15 @@
  */
 
 const albumArtImages = [
-  '../soundboard/images/album-art/caribbean1.webp',
-  '../soundboard/images/album-art/caribbean2.webp',
-  '../soundboard/images/album-art/seaturtle1.webp',
-  '../soundboard/images/album-art/bahamas2.webp',
-  '../soundboard/images/album-art/mountain5.webp',
-  '../soundboard/images/album-art/orca1.webp',
-  '../soundboard/images/album-art/rainbow1.webp',
-  '../soundboard/images/album-art/river2.webp',
-  '../soundboard/images/album-art/waterfall1.webp',
+  './images/album-art/caribbean1.webp',
+  './images/album-art/caribbean2.webp',
+  './images/album-art/seaturtle1.webp',
+  './images/album-art/bahamas2.webp',
+  './images/album-art/mountain5.webp',
+  './images/album-art/orca1.webp',
+  './images/album-art/rainbow1.webp',
+  './images/album-art/river2.webp',
+  './images/album-art/waterfall1.webp',
 
 ];
 
