@@ -44,6 +44,11 @@ function announceToScreenReader(message) {
 }
 
 // ===== Utility Functions =====
+// Ids are strings like "2-0" (playlist 2, song 0); older saved playlists may have numbers
+function sameId(a, b) {
+  return String(a) === String(b);
+}
+
 function getCurrentSongIndex() {
   return songsListInstance.userData?.songs.indexOf(songsListInstance.userData?.currentSong);
 }
@@ -235,10 +240,10 @@ function shuffle() {
 }
 
 function deleteSong(id) {
-  const song = songsListInstance.userData.songs.find(s => s.id === id);
-  songsListInstance.userData.songs = songsListInstance.userData.songs.filter(s => s.id !== id);
+  const song = songsListInstance.userData.songs.find(s => sameId(s.id, id));
+  songsListInstance.userData.songs = songsListInstance.userData.songs.filter(s => !sameId(s.id, id));
   
-  if (songsListInstance.userData.currentSong?.id === id) {
+  if (sameId(songsListInstance.userData.currentSong?.id, id)) {
     songsListInstance.userData.currentSong = null;
     songsListInstance.userData.song_current_time = 0;
     pauseSong();
@@ -257,11 +262,11 @@ function deleteSong(id) {
 }
 
 function playSong(id) {
-  const s = songsListInstance.userData?.songs.find(x => x.id === id);
+  const s = songsListInstance.userData?.songs.find(x => sameId(x.id, id));
   if (!s) return;
 
   // Check if we're resuming the same song that was paused
-  const isSameSong = songsListInstance.userData?.currentSong?.id === id;
+  const isSameSong = sameId(songsListInstance.userData?.currentSong?.id, id);
   const wasPaused = songsListInstance.audio.paused && songsListInstance.audio.currentTime > 0;
 
   if (isSameSong && wasPaused) {
@@ -308,12 +313,12 @@ function renderSongs(arr) {
   
   container.innerHTML = arr.map(s => `
     <li id="song-${s.id}" class="playlist-song" role="listitem">
-      <button onclick="playSong(${s.id})" class="playlist-song-info" aria-label="Play ${s.title} by ${s.artist}">
+      <button onclick="playSong('${s.id}')" class="playlist-song-info" aria-label="Play ${s.title} by ${s.artist}">
         <span class="playlist-song-title">${escapeHtml(s.title)}</span>
         <span class="playlist-song-artist">${escapeHtml(s.artist)}</span>
         <span class="playlist-song-duration">${s.duration}</span>
       </button>
-      <button onclick="deleteSong(${s.id})" class="playlist-song-delete" aria-label="Remove ${s.title} from playlist" title="Remove song">
+      <button onclick="deleteSong('${s.id}')" class="playlist-song-delete" aria-label="Remove ${s.title} from playlist" title="Remove song">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -334,12 +339,65 @@ function sortSongs() {
   return songsListInstance.userData.songs;
 }
 
+function isInUserPlaylist(song) {
+  return songsListInstance.userData.songs.some(x => sameId(x.id, song.id) || x.src === song.src);
+}
+
 function addAllSongs() {
-  songsListInstance.userData.songs = [...songsListInstance.allSongs];
+  const toAdd = songsListInstance.allSongs.filter(s => !isInUserPlaylist(s));
+  songsListInstance.userData.songs.push(...toAdd);
   renderSongs(sortSongs());
+  highlightCurrentSong();
   savePlaylistToLocalStorage();
   updateSongCount();
-  announceToScreenReader(`Added all ${songsListInstance.allSongs.length} songs to playlist`);
+  announceToScreenReader(`Added ${toAdd.length} ${toAdd.length === 1 ? 'song' : 'songs'} to playlist`);
+}
+
+// ===== Library Playlists =====
+const LIBRARY_PLAYLIST_KEY = 'soundflow-library-playlist';
+
+function populateSongSelect() {
+  const select = songsListInstance.selectSongList;
+  select.length = 1; // keep "Choose a song..."
+  songsListInstance.allSongs.forEach(s => {
+    const option = document.createElement('option');
+    option.value = s.id;
+    option.textContent = s.title;
+    select.appendChild(option);
+  });
+}
+
+function selectLibraryPlaylist(key) {
+  const list = songsListInstance.playlists.find(p => p.key === key) || songsListInstance.playlists[0];
+  songsListInstance.allSongs = list ? list.songs : [];
+  if (list) {
+    songsListInstance.selectPlaylist.value = list.key;
+    try { localStorage.setItem(LIBRARY_PLAYLIST_KEY, list.key); } catch (err) {}
+  }
+  populateSongSelect();
+}
+
+function populatePlaylistSelect() {
+  const select = songsListInstance.selectPlaylist;
+  const playlists = songsListInstance.playlists;
+  select.innerHTML = '';
+
+  if (playlists.length === 0) {
+    select.add(new Option('No playlists found', ''));
+    return;
+  }
+
+  playlists.forEach(p => select.add(new Option(`${p.name} (${p.songs.length})`, p.key)));
+  select.disabled = false;
+
+  let savedKey = null;
+  try { savedKey = localStorage.getItem(LIBRARY_PLAYLIST_KEY); } catch (err) {}
+  selectLibraryPlaylist(savedKey);
+
+  select.addEventListener('change', () => {
+    selectLibraryPlaylist(select.value);
+    announceToScreenReader(`${select.options[select.selectedIndex].text} playlist selected`);
+  });
 }
 
 // ===== Event Listeners =====
@@ -371,21 +429,13 @@ function registerEventListeners() {
   // Audio time update
   songsListInstance.audio.addEventListener('timeupdate', updateProgress);
 
-  // Populate dropdown
-  songsListInstance.allSongs.forEach(s => {
-    const option = document.createElement('option');
-    option.value = s.id;
-    option.textContent = s.title;
-    songsListInstance.selectSongList.appendChild(option);
-  });
-
   // Add song button
   document.querySelector('#button-addsong').addEventListener("click", (e) => {
     e.preventDefault();
-    const selectedId = parseInt(songsListInstance.selectSongList.value);
-    const s = songsListInstance.allSongs.find(x => x.id === selectedId);
-    
-    if (s && !songsListInstance.userData.songs.some(x => x.id === s.id)) {
+    const selectedId = songsListInstance.selectSongList.value;
+    const s = songsListInstance.allSongs.find(x => sameId(x.id, selectedId));
+
+    if (s && !isInUserPlaylist(s)) {
       songsListInstance.userData.songs.push(s);
       renderSongs(songsListInstance.userData.songs);
       savePlaylistToLocalStorage();
@@ -480,31 +530,47 @@ window.addEventListener("load", () => {
   initRandomAlbumArt();
   
   // Initialize player
-  songsListInstance = new SongsListGlobals(allSongs);
+  songsListInstance = new SongsListGlobals([]);
 
   // Load saved playlist
+  let hasSavedPlaylist = false;
   const saved = localStorage.getItem("customPlaylist");
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
       if (Array.isArray(parsed) && parsed.length > 0) {
         songsListInstance.userData.songs = parsed;
+        hasSavedPlaylist = true;
       }
     } catch (err) {
       console.error("Load error:", err);
     }
   }
 
-  // Setup
+  // Setup (the player is usable right away; library playlists fill in below)
   registerEventListeners();
   initVolumeControls();
   initSearch();
   renderSongs(songsListInstance.userData.songs);
-  savePlaylistToLocalStorage();
   updateSongCount();
-  
+
   // Set initial button state
   updatePlayPauseButtons(false);
+
+  // Find and load songsListProSongsList1.js, 2.js, ... then fill the playlist select
+  loadAllPlaylists().then(playlists => {
+    songsListInstance.playlists = playlists;
+    populatePlaylistSelect();
+
+    // First visit: start the user's playlist with the first library playlist
+    if (!hasSavedPlaylist && playlists.length > 0 && songsListInstance.userData.songs.length === 0) {
+      songsListInstance.userData.songs = [...playlists[0].songs];
+      renderSongs(songsListInstance.userData.songs);
+      updateSongCount();
+    }
+    setPlayButtonAccessibleText();
+    savePlaylistToLocalStorage();
+  });
 });
 
 // Listen for system theme changes

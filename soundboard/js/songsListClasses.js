@@ -19,6 +19,8 @@ class SongsListGlobals{
         currentSong: null,
         songCurrentTime: 0,
     };
+    this.playlists = [];
+    this.selectPlaylist = this.getElement('#select-playlist');
     this.selectSongList = this.getElement('#select-songlist');
     this.buttonAddSong = this.getElement('#button-addsong');
     this.buttonAddAllSongs = this.getElement('#button-addallsongs');

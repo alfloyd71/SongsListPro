@@ -762,6 +762,23 @@ main {
   position: relative;
 }
 
+/* Playlist + song selects: stacked on phones, one row on wider screens */
+.library-selects {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.library-selects .select-wrapper {
+  flex: 1;
+  min-width: 0;
+}
+
+.song-select:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
 .song-select {
   width: 100%;
   padding: 0.75rem 2.5rem 0.75rem 1rem;
@@ -910,6 +927,14 @@ main {
 
   .playlist-search {
     width: 200px;
+  }
+
+  .library-selects {
+    flex-direction: row;
+  }
+
+  .library-selects .select-wrapper-playlist {
+    flex: 0 1 40%;
   }
 }
 

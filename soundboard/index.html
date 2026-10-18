@@ -207,6 +207,16 @@
         <p class="library-description">Add songs from our collection to your playlist</p>
         
         <div class="library-controls">
+          <div class="library-selects">
+          <div class="select-wrapper select-wrapper-playlist">
+            <label for="select-playlist" class="sr-only">Select a playlist</label>
+            <select id="select-playlist" class="song-select" aria-label="Select a playlist" disabled>
+              <option value="">Loading playlists...</option>
+            </select>
+            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
           <div class="select-wrapper">
             <label for="select-songlist" class="sr-only">Select a song to add</label>
             <select id="select-songlist" class="song-select" aria-label="Select a song to add">
@@ -216,7 +226,8 @@
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </div>
-          
+          </div>
+
           <div class="library-buttons" role="group" aria-label="Playlist management">
             <button id="button-addsong" class="btn btn-primary">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -254,7 +265,7 @@
   </footer>
 
   <script src="./js/albumArtConfig.js"></script>
-  <script src="./js/songsListProSongs.js"></script>
+  <script src="./js/playlistLoader.js"></script>
   <script src="./js/songsListClasses.js"></script>
   <script src="./js/script.js"></script>
 </body>
