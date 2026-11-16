@@ -14,17 +14,17 @@ songsListProPlaylists.push({
   songs: [
     {
       id: 0,
-      title: "And As You Would That Men Should Do Unto You(Version #1)",
+      title: "Added Unto You(1st Version)",
       artist: "AI Hymns",
-      duration: "3:04",
-      src: "./songs/playlists/playlist1/and-as-ye-would-song1.mp3",
+      duration: "3:30",
+      src: "./songs/playlists/playlist1/added-unto-you-song-1.mp3",
     },
     {
       id: 1,
       title: "Let All Things Be Done With Charity(Version #1)",
       artist: "AI Hymns",
-      duration: "2:51",
-      src: "./songs/playlists/playlist1/let-all-things-be-done-with-charity-song1.mp3",
+      duration: "3:00",
+      src: "./songs/playlists/playlist1/done-with-charity-song-1.mp3",
     },
    
   ],
